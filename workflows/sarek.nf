@@ -496,6 +496,8 @@ workflow SAREK {
         sort_bam = true
         FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP(ch_reads_to_map, ch_map_index, sort_bam)
 
+        ch_reads_to_map.dump{"ch_reads_to_map: $it"}
+
         // Grouping the bams from the same samples not to stall the workflow
         ch_bam_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP.out.bam.map{ meta, bam ->
             numLanes = meta.numLanes ?: 1
@@ -520,6 +522,8 @@ workflow SAREK {
             // and not stall the workflow until all reads from all channels are mapped
             [ groupKey(new_meta, numLanes * size), bam]
         }.groupTuple()
+
+        ch_bam_mapped.dump{"ch_bam_mapped: $it"}
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
         // Except if and only if skipping markduplicates or saving mapped bams
