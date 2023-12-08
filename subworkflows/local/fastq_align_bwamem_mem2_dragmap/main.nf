@@ -31,6 +31,8 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP {
     ch_bam_mapped = ch_bam_mapped.mix(BWAMEM2_MEM.out.bam)
     ch_bam_mapped = ch_bam_mapped.mix(DRAGMAP_ALIGN.out.bam)
 
+    ch_bam_mapped.dump(tag:'ch_bam_mapped_align') {"$it"}
+
     // Gather reports of all tools used
     ch_reports = ch_reports.mix(DRAGMAP_ALIGN.out.log)
 
